@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "prisma/generated/client"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  workspaces Workspace[]
+  bookings   Booking[]
+
+  @@map("users")
+}
+
+enum Role {
+  SUPER_ADMIN
+  WORKSPACE_MANAGER
+  USER
+}
+
+model City {
+  id         String      @id @default(uuid())
+  name       String      @unique
+  workspaces Workspace[]
+
+  @@map("cities")
+}
+
+model Workspace {
+  id          String @id @default(uuid())
+  name        String @unique
+  description String @db.Text
+  address     String @unique
+  latitude    Float
+  longitude   Float
+  cityId      String
+  managerId   String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  city      City       @relation(fields: [cityId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  manager   User       @relation(fields: [managerId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  amenities Amenity[]
+  bookings  Booking[]
+  timeSlots TimeSlot[]
+
+  @@index([cityId])
+  @@index([managerId])
+  @@map("workspaces")
+}
+
+model Amenity {
+  id   String  @id @default(uuid())
+  name String  @unique
+  icon String?
+
+  workspace Workspace[]
+
+  @@map("amenities")
+}
+
+model TimeSlot {
+  id          String   @id @default(uuid())
+  date        DateTime
+  hour        Int      @db.TinyInt
+  isBooked    Boolean  @default(false)
+  workspaceId String
+
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  booking   Booking?
+
+  @@unique([workspaceId, date, hour], name: "workspace_date_hour_unique")
+  @@index([workspaceId, date, isBooked])
+  @@index([date, isBooked])
+  @@map("time_slots")
+}
+
+model Booking {
+  id          String @id @default(uuid())
+  userId      String
+  workspaceId String
+  timeSlotId  String @unique
+
+  createdAt DateTime @default(now())
+
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  timeSlot  TimeSlot  @relation(fields: [timeSlotId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@unique([userId, timeSlotId], name: "user_timeslot_unique")
+  @@map("bookings")
+}
