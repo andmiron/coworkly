@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "prisma/generated/client"
+  output   = "../prisma_generated/client"
 }
 
 datasource db {
@@ -41,8 +41,6 @@ model Workspace {
   name      String   @unique
   description String @db.Text
   address   String   @unique
-  latitude  Float
-  longitude Float
   cityId    String
   managerId String
 
@@ -63,7 +61,6 @@ model Workspace {
 model Amenity {
   id        String   @id @default(uuid())
   name      String   @unique
-  icon      String?
 
   workspace Workspace[]
 

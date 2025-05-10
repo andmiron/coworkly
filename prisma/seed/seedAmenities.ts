@@ -1,22 +1,22 @@
-import { prisma } from "../seed";
-import { Prisma } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { Prisma } from "@/lib/prisma";
 
 export default async function seedAmenities() {
   console.log("Seeding amenities... ⌛");
   const testAmenities: Prisma.AmenityCreateInput[] = [
-    { name: "Wi-Fi", icon: "FaWifi" },
-    { name: "Parking", icon: "FaParking" },
-    { name: "Coffee", icon: "FaCoffee" },
-    { name: "Tea", icon: "FaCoffee" },
-    { name: "Water", icon: "FaGlassWaterDroplet" },
-    { name: "Snacks", icon: "FaCookieBite" },
-    { name: "Private Rooms", icon: "FaUserSecret" },
-    { name: "Meeting Rooms", icon: "FaUsers" },
-    { name: "Conference Rooms", icon: "FaUsersRectangle" },
-    { name: "Event Spaces", icon: "FaCalendar" },
-    { name: "Private Offices", icon: "FaLock" },
-    { name: "Shared Offices", icon: "FaUserLock" },
-    { name: "Desks", icon: "FaDesktop" },
+    { name: "Wi-Fi" },
+    { name: "Parking" },
+    { name: "Coffee" },
+    { name: "Tea" },
+    { name: "Water" },
+    { name: "Snacks" },
+    { name: "Private Rooms" },
+    { name: "Meeting Rooms" },
+    { name: "Conference Rooms" },
+    { name: "Event Spaces" },
+    { name: "Private Offices" },
+    { name: "Shared Offices" },
+    { name: "Desks" },
   ];
 
   for (const amenity of testAmenities) {

@@ -1,5 +1,5 @@
-import { prisma } from "../seed";
-import { Prisma } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { Prisma } from "@/lib/prisma";
 
 export default async function seedCities() {
   console.log("Seeding cities... ⌛");

@@ -1,12 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import prisma from "@/lib/prisma";
 import seedUsers from "./seed/seedUsers";
 import seedCities from "./seed/seedCities";
 import seedAmenities from "./seed/seedAmenities";
 import seedWorkspaces from "./seed/seedWorkspaces";
 import seedTimeslots from "./seed/seedTimeslots";
 import seedBookings from "./seed/seedBookings";
-
-export const prisma = new PrismaClient();
 
 export async function main() {
   await seedUsers();

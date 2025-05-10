@@ -1,5 +1,5 @@
-import { prisma } from "../seed";
-import { Prisma } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { Prisma } from "@/lib/prisma";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 export default async function seedTimeslots() {

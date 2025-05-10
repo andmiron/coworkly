@@ -1,5 +1,5 @@
-import { prisma } from "../seed";
-import { Prisma, Role } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { Prisma, Role } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 
 export default async function seedUsers() {

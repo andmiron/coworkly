@@ -1,5 +1,5 @@
-import { prisma } from "../seed";
-import { Prisma, Role } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { Prisma, Role } from "@/lib/prisma";
 
 export default async function seedWorkspaces() {
   console.log("Seeding workspaces... ⌛");
@@ -44,8 +44,6 @@ export default async function seedWorkspaces() {
         randomCity.name
       }, perfect for productivity. Workspace number ${i + 1}.`,
       address: uniqueAddress,
-      latitude: parseFloat((Math.random() * (90 - -90) + -90).toFixed(6)),
-      longitude: parseFloat((Math.random() * (180 - -180) + -180).toFixed(6)),
       city: {
         connect: { id: randomCity.id },
       },
