@@ -16,8 +16,10 @@ import { hasLength } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
+  const [loading, setLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const handleLogin = async ({
@@ -28,10 +30,11 @@ export default function LoginPage() {
     password: string;
   }) => {
     try {
+      setLoading(true);
       const result = await signIn("credentials", {
         username,
         password,
-        // redirectTo: "/workspaces",
+        // rediectTo: "/workspaces",
         redirect: false,
       });
 
@@ -41,6 +44,7 @@ export default function LoginPage() {
             ? "Invalid username or password"
             : "An error occurred during login";
 
+        setLoading(false);
         return notifications.show({
           title: "Error",
           message: errorMessage,
@@ -49,16 +53,17 @@ export default function LoginPage() {
       }
 
       if (!result.error && result.ok) {
+        setLoading(false);
         notifications.show({
           title: "Success",
           message: "Login successful",
           color: "green",
         });
         await new Promise((resolve) => setTimeout(resolve, 100));
-
         router.push("/workspaces");
       }
     } catch {
+      setLoading(false);
       notifications.show({
         title: "Error",
         message: "Login failed",
@@ -112,7 +117,7 @@ export default function LoginPage() {
             mt="md"
             {...loginForm.getInputProps("password")}
           />
-          <Button fullWidth mt="xl" type="submit">
+          <Button loading={loading} fullWidth mt="xl" type="submit">
             Sign in
           </Button>
         </form>

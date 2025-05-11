@@ -13,8 +13,13 @@ import {
 import { useForm, hasLength } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function RegisterPage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+
   const registerForm = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -23,14 +28,68 @@ export default function RegisterPage() {
       confirmPassword: "",
     },
     validate: {
-      username: hasLength({ max: 30 }, "Maximum of 30 characters long"),
-      password: hasLength({ min: 6 }, "At least 6 characters long"),
+      username: hasLength(
+        { max: 30 },
+        "Username must be less than 30 characters"
+      ),
+      password: hasLength(
+        { min: 4 },
+        "Password must be at least 4 characters long"
+      ),
       confirmPassword: (value, values) =>
         value !== values.password ? "Passwords do not match" : null,
     },
   });
 
-  const handleSubmitRegister = async (values) => {
+  const handleSubmitRegister = async ({
+    username,
+    password,
+  }: {
+    username: string;
+    password: string;
+  }) => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        body: JSON.stringify({ username, password }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setIsLoading(false);
+        notifications.show({
+          title: "Register failed!",
+          message: data.error,
+          color: "red",
+        });
+        return;
+      }
+
+      if (response.ok && data.user) {
+        setIsLoading(false);
+        notifications.show({
+          title: "Register successful!",
+          message: "You have successfully created an account.",
+          color: "green",
+        });
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
+      notifications.show({
+        title: "Register failed!",
+        message: "Register failed, please try again.",
+        color: "red",
+      });
+    }
+
     // try {
     //   await register(
     //     values.email,
@@ -90,7 +149,7 @@ export default function RegisterPage() {
             mt="md"
             {...registerForm.getInputProps("confirmPassword")}
           />
-          <Button fullWidth mt="xl" type="submit">
+          <Button fullWidth mt="xl" type="submit" loading={isLoading}>
             Sign up
           </Button>
         </form>

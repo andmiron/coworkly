@@ -13,8 +13,10 @@ import {
   Group,
   Text,
   UnstyledButton,
+  LoadingOverlay,
 } from "@mantine/core";
 import Link from "next/link";
+import Header from "./Header";
 
 export default function AuthProvider({
   children,
@@ -23,44 +25,14 @@ export default function AuthProvider({
 }) {
   const { data: session, status } = useSession();
 
-  if (status === "loading") {
-    return <div>Loading...</div>;
-  }
-
   return (
     <MantineProvider theme={theme}>
       <ModalsProvider>
-        <Notifications position="top-center" zIndex={1000} />
-        <AppShell header={{ height: 60 }} padding="md">
+        <Notifications position="bottom-center" zIndex={1000} />
+        <AppShell header={{ height: 80 }} padding="md">
+          <LoadingOverlay visible={status === "loading"} />
           <AppShellHeader>
-            <Container p="md" h="100%">
-              <Group h="100%" justify="space-between">
-                <UnstyledButton component={Link} href="/">
-                  <Text size="xl" fw={400}>
-                    Coworkly
-                  </Text>
-                </UnstyledButton>
-                <UnstyledButton component={Link} href="/workspaces">
-                  <Text fw={400}>Workspaces</Text>
-                </UnstyledButton>
-                <Group>
-                  {session ? (
-                    <UnstyledButton onClick={() => signOut()}>
-                      Logout
-                    </UnstyledButton>
-                  ) : (
-                    <>
-                      <UnstyledButton component={Link} href="/login">
-                        Login
-                      </UnstyledButton>
-                      <UnstyledButton component={Link} href="/register">
-                        Register
-                      </UnstyledButton>
-                    </>
-                  )}
-                </Group>
-              </Group>
-            </Container>
+            <Header session={session} />
           </AppShellHeader>
           <AppShellMain>
             <Container>{children}</Container>

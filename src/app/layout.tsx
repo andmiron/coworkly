@@ -1,5 +1,6 @@
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
+import "@mantine/dates/styles.css";
 import "./global.css";
 import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 import { SessionProvider } from "next-auth/react";

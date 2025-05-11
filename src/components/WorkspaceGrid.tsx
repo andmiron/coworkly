@@ -14,7 +14,6 @@ interface WorkspaceGridProps {
     };
     amenities: Array<{
       name: string;
-      icon: string | null;
     }>;
   }>;
 }

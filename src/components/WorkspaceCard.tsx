@@ -14,7 +14,6 @@ interface WorkspaceCardProps {
     };
     amenities: Array<{
       name: string;
-      icon: string | null;
     }>;
   };
 }
