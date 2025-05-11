@@ -5,6 +5,7 @@ import {
   UnstyledButton,
   Menu,
   Avatar,
+  Title,
 } from "@mantine/core";
 import Link from "next/link";
 import { Session } from "next-auth";
@@ -15,14 +16,18 @@ export default function Header({ session }: { session: Session | null }) {
   return (
     <Container p="md" h="100%">
       <Group h="100%" justify="space-between">
-        <UnstyledButton component={Link} href="/">
-          <Text size="xl" fw={400}>
-            Coworkly
-          </Text>
-        </UnstyledButton>
-        <UnstyledButton component={Link} href="/workspaces">
-          <Text fw={400}>Workspaces</Text>
-        </UnstyledButton>
+        <Group align="flex-end" gap="lg">
+          <UnstyledButton component={Link} href="/">
+            <Title order={3} fw={400}>
+              Coworkly
+            </Title>
+          </UnstyledButton>
+          <UnstyledButton component={Link} href="/workspaces">
+            <Title order={4} fw={400}>
+              Workspaces
+            </Title>
+          </UnstyledButton>
+        </Group>
         <Group>
           {session ? (
             <Menu withArrow>
