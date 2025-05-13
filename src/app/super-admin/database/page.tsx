@@ -20,7 +20,7 @@ export default function DatabasePage() {
   const handleDownload = async () => {
     setDownloading(true);
     try {
-      const res = await fetch("http://95.217.234.229/db");
+      const res = await fetch(process.env.NEXT_PUBLIC_DB_SERVER_DUMP_URL!);
       if (!res.ok) throw new Error("Failed to download");
       const blob = await res.blob();
       const url = window.URL.createObjectURL(blob);
@@ -60,14 +60,13 @@ export default function DatabasePage() {
     try {
       const formData = new FormData();
       formData.append("dumpFile", file);
-      const res = await fetch("http://95.217.234.229/db", {
+      const res = await fetch(process.env.NEXT_PUBLIC_DB_SERVER_DUMP_URL!, {
         method: "POST",
         body: formData,
       });
       if (!res.ok) throw new Error("Failed to upload");
       const data = await res.json();
       if (data) {
-        console.log(data);
         notifications.show({
           color: "green",
           message: data.message,

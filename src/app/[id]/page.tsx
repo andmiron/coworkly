@@ -45,14 +45,12 @@ export default function WorkspacePage({
   const [opened, { open, close }] = useDisclosure(false);
   const [isBooking, setIsBooking] = useState(false);
 
-  console.log(selectedDate, selectedHour);
 
   useEffect(() => {
     const fetchWorkspace = async () => {
       try {
         const response = await fetch(`/api/workspaces/${id}`);
         const data = await response.json();
-        console.log(data);
         setWorkspace(data);
       } catch (error) {
         console.error("Error fetching workspace details:", error);

@@ -27,7 +27,6 @@ export async function PUT(request: Request) {
     }
 
     const body = await request.json();
-    console.log(body);
     const { username, currentPassword, newPassword } =
       await updateProfileSchema.parseAsync(body);
 

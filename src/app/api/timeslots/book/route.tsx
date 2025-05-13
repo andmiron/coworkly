@@ -50,7 +50,6 @@ export async function POST(request: Request) {
 
     // Create booking and update time slot in a transaction
     const booking = await prisma.$transaction(async (tx) => {
-      console.log(session.user, timeSlot.workspaceId, timeSlot.id);
       // Create the booking
       const newBooking = await tx.booking.create({
         data: {
