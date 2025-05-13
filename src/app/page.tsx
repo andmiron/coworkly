@@ -77,18 +77,21 @@ export default function WorkspacesPage() {
     </Combobox.Option>
   ));
 
-  const filteredWorkspaces = workspaces?.filter((workspace) => {
-    const matchesCity = filterCity ? workspace.city.name === filterCity : true;
-
-    const matchesAmenities =
-      filterAmenities.length > 0
-        ? filterAmenities.every((amenity) =>
-            workspace.amenities.some((a) => a.name === amenity)
-          )
+  const filteredWorkspaces =
+    workspaces?.filter((workspace) => {
+      const matchesCity = filterCity
+        ? workspace.city.name === filterCity
         : true;
 
-    return matchesCity && matchesAmenities;
-  });
+      const matchesAmenities =
+        filterAmenities.length > 0
+          ? filterAmenities.every((amenity) =>
+              workspace.amenities.some((a) => a.name === amenity)
+            )
+          : true;
+
+      return matchesCity && matchesAmenities;
+    }) ?? [];
 
   if (!workspaces) {
     return (
