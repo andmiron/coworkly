@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
+import logDbOperation from "@/lib/logDbOpertaion";
 
 const timeSlotBookSchema = z.object({
   timeSlotId: z.string().uuid(),
@@ -11,6 +12,7 @@ const timeSlotBookSchema = z.object({
 export async function POST(request: Request) {
   try {
     const session = await auth();
+
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -66,6 +68,8 @@ export async function POST(request: Request) {
 
       return newBooking;
     });
+
+    await logDbOperation(session.user.id, "create", "booking", booking);
 
     // After successful booking, revalidate the workspace page
     revalidatePath(`/workspaces/${timeSlot.workspaceId}`);

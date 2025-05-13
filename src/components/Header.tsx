@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Container,
   Group,
@@ -22,11 +24,6 @@ export default function Header({ session }: { session: Session | null }) {
               Coworkly
             </Title>
           </UnstyledButton>
-          <UnstyledButton component={Link} href="/workspaces">
-            <Title order={4} fw={400}>
-              Workspaces
-            </Title>
-          </UnstyledButton>
         </Group>
         <Group>
           {session ? (
@@ -43,20 +40,19 @@ export default function Header({ session }: { session: Session | null }) {
                   <Text fw={400}>Profile</Text>
                 </Menu.Item>
                 {session.user.role === Role.SUPER_ADMIN && (
+                  <Menu.Item component={Link} href="/super-admin">
+                    <Text fw={400}>Super Admin Panel</Text>
+                  </Menu.Item>
+                )}
+                {session.user.role === Role.USER && (
+                  <Menu.Item component={Link} href="/bookings">
+                    <Text fw={400}>My Bookings</Text>
+                  </Menu.Item>
+                )}
+                {session.user.role === Role.ADMIN && (
                   <Menu.Item component={Link} href="/admin">
                     <Text fw={400}>Admin Panel</Text>
                   </Menu.Item>
-                )}
-                {session.user.role !== Role.SUPER_ADMIN && (
-                  <>
-                    <Menu.Item component={Link} href="/my-workspaces">
-                      <Text fw={400}>My Workspaces</Text>
-                    </Menu.Item>
-
-                    <Menu.Item component={Link} href="/bookings">
-                      <Text fw={400}>My Bookings</Text>
-                    </Menu.Item>
-                  </>
                 )}
                 <Menu.Divider />
                 <Menu.Item onClick={() => signOut({ redirectTo: "/login" })}>

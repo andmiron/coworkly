@@ -60,7 +60,7 @@ export default function LoginPage() {
           color: "green",
         });
         await new Promise((resolve) => setTimeout(resolve, 100));
-        router.push("/workspaces");
+        router.push("/");
       }
     } catch {
       setLoading(false);

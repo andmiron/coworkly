@@ -3,11 +3,10 @@ import { NextResponse } from "next/server";
 
 export default auth((req) => {
   const isLoggedIn = !!req.auth;
-  const isProtectedRoute =
-    req.nextUrl.pathname.startsWith("/my-workspaces") ||
-    req.nextUrl.pathname.startsWith("/bookings");
 
   const isAdminRoute = req.nextUrl.pathname.startsWith("/admin");
+
+  const isSuperAdminRoute = req.nextUrl.pathname.startsWith("/super-admin");
 
   const isAuthRoute =
     req.nextUrl.pathname.startsWith("/login") ||
@@ -19,13 +18,17 @@ export default auth((req) => {
   }
 
   if (!isLoggedIn) {
-    if (isProtectedRoute || isAdminRoute) {
+    if (isSuperAdminRoute || isAdminRoute) {
       const redirectUrl = new URL("/login", req.url);
       return NextResponse.redirect(redirectUrl);
     }
   }
 
-  if (isAdminRoute && req.auth?.user?.role !== "SUPER_ADMIN") {
+  if (isSuperAdminRoute && req.auth?.user?.role !== "SUPER_ADMIN") {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
+
+  if (isAdminRoute && req.auth?.user?.role !== "ADMIN") {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
@@ -33,11 +36,5 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: [
-    "/my-workspaces/:path*",
-    "/bookings/:path*",
-    "/admin/:path*",
-    "/login",
-    "/register",
-  ],
+  matcher: ["/admin/:path*", "/super-admin/:path*", "/login", "/register"],
 };

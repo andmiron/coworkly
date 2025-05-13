@@ -166,6 +166,15 @@ exports.Prisma.BookingScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.LogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  operationType: 'operationType',
+  model: 'model',
+  data: 'data',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -207,9 +216,22 @@ exports.Prisma.BookingOrderByRelevanceFieldEnum = {
   workspaceId: 'workspaceId',
   timeSlotId: 'timeSlotId'
 };
+
+exports.Prisma.NullsOrder = {
+  first: 'first',
+  last: 'last'
+};
+
+exports.Prisma.LogOrderByRelevanceFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  operationType: 'operationType',
+  model: 'model',
+  data: 'data'
+};
 exports.Role = exports.$Enums.Role = {
   SUPER_ADMIN: 'SUPER_ADMIN',
-  WORKSPACE_MANAGER: 'WORKSPACE_MANAGER',
+  ADMIN: 'ADMIN',
   USER: 'USER'
 };
 
@@ -219,7 +241,8 @@ exports.Prisma.ModelName = {
   Workspace: 'Workspace',
   Amenity: 'Amenity',
   TimeSlot: 'TimeSlot',
-  Booking: 'Booking'
+  Booking: 'Booking',
+  Log: 'Log'
 };
 
 /**

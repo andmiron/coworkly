@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import { z } from "zod";
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
+import logDbOperation from "@/lib/logDbOpertaion";
 
 const updateProfileSchema = z.object({
   username: z
@@ -20,6 +21,7 @@ const updateProfileSchema = z.object({
 export async function PUT(request: Request) {
   try {
     const session = await auth();
+
     if (!session?.user) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -73,6 +75,12 @@ export async function PUT(request: Request) {
     });
 
     const { password: _, ...userWithoutPassword } = updatedUser;
+    await logDbOperation(
+      session.user.id,
+      "update",
+      "user",
+      userWithoutPassword
+    );
     revalidatePath("/");
     return NextResponse.json(userWithoutPassword);
   } catch (error) {

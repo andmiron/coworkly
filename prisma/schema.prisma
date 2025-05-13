@@ -24,7 +24,7 @@ model User {
 
 enum Role {
   SUPER_ADMIN
-  WORKSPACE_MANAGER
+  ADMIN
   USER
 }
 
@@ -97,6 +97,17 @@ model Booking {
 
   @@unique([userId, timeSlotId], name: "user_timeslot_unique")
   @@map("bookings")
+}
+
+model Log {
+  id            String   @id @default(uuid())
+  userId        String?  
+  operationType String
+  model         String
+  data          String   @db.Text
+  createdAt     DateTime @default(now())
+
+  @@map("logs")
 }
 
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { hash } from "bcryptjs";
 import prisma, { Role } from "@/lib/prisma";
+import logDbOperation from "@/lib/logDbOpertaion";
 
 const registerSchema = z.object({
   username: z
@@ -46,6 +47,7 @@ export async function POST(req: Request) {
 
     const { password: _, ...userWithoutPassword } = user;
 
+    await logDbOperation(user.id, "create", "user", user);
     return NextResponse.json(
       {
         message: "User registered successfully",
