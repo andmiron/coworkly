@@ -1,7 +1,7 @@
 "use client";
 
 import { MantineProvider } from "@mantine/core";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { theme } from "@/theme";
 import { ModalsProvider } from "@mantine/modals";
 import { Notifications } from "@mantine/notifications";
@@ -10,12 +10,8 @@ import {
   AppShellHeader,
   AppShellMain,
   Container,
-  Group,
-  Text,
-  UnstyledButton,
   LoadingOverlay,
 } from "@mantine/core";
-import Link from "next/link";
 import Header from "./Header";
 
 export default function AuthProvider({

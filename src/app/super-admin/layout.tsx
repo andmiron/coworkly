@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  AppShellMain,
-  AppShellNavbar,
-  Box,
-  Grid,
-  GridCol,
-  Group,
-  SimpleGrid,
-  Stack,
-  Title,
-} from "@mantine/core";
+import { Grid, GridCol, Stack, Title } from "@mantine/core";
 import DashboardNavbar from "@/components/DashboardNavbar";
 
 export default function SuperAdminLayout({

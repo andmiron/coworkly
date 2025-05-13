@@ -37,7 +37,7 @@ export default function AdminPanel() {
   const [createTimeSlotFetching, setCreateTimeSlotFetching] = useState(true);
   const [createWorkspaceLoading, setCreateWorkspaceLoading] = useState(false);
   const [createTimeSlotLoading, setCreateTimeSlotLoading] = useState(false);
-  const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
+  // const [timeSlots, setTimeSlots] = useState<TimeSlot[]>([]);
   const [workspaces, setWorkspaces] = useState<
     (Workspace & { timeSlots: TimeSlot[] })[]
   >([]);
@@ -85,14 +85,12 @@ export default function AdminPanel() {
   useEffect(() => {
     if (openedCreateTimeSlot) {
       setCreateTimeSlotFetching(true);
-      Promise.all([
-        fetch("/api/timeslots").then((r) => r.json()),
-        fetch("/api/workspaces").then((r) => r.json()),
-      ]).then(([timeSlots, workspaces]) => {
-        setTimeSlots(timeSlots);
-        setWorkspaces(workspaces);
-        setCreateTimeSlotFetching(false);
-      });
+      fetch("/api/workspaces")
+        .then((r) => r.json())
+        .then((workspaces) => {
+          setWorkspaces(workspaces);
+          setCreateTimeSlotFetching(false);
+        });
     }
   }, [openedCreateTimeSlot]);
 
@@ -117,7 +115,7 @@ export default function AdminPanel() {
         message: "Workspace was created successfully!",
         color: "green",
       });
-    } catch (e) {
+    } catch {
       notifications.show({
         title: "Error",
         message: "Failed to create workspace.",
@@ -168,10 +166,12 @@ export default function AdminPanel() {
     setSelectedHour(null);
   };
 
-  const selectWorkspaceData = workspaces.map((w) => ({
-    value: w.id,
-    label: w.name,
-  }));
+  const selectWorkspaceData = workspaces.map((w) => {
+    return {
+      value: w.id,
+      label: w.name,
+    };
+  });
 
   const handleTimeSlotChange = (hour: string | null) => {
     setSelectedHour(hour);
@@ -196,7 +196,7 @@ export default function AdminPanel() {
         message: "Time slot was created successfully!",
         color: "green",
       });
-    } catch (e) {
+    } catch {
       notifications.show({
         title: "Error",
         message: "Failed to create time slot.",

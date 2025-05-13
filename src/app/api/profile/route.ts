@@ -65,7 +65,7 @@ export async function PUT(request: Request) {
     }
 
     // Update user
-    const updateData: any = {};
+    const updateData: { username?: string; password?: string } = {};
     if (username) updateData.username = username;
     if (newPassword) updateData.password = await bcrypt.hash(newPassword, 12);
 
@@ -74,6 +74,7 @@ export async function PUT(request: Request) {
       data: updateData,
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = updatedUser;
     await logDbOperation(
       session.user.id,

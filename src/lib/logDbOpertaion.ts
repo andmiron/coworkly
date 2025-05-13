@@ -4,10 +4,11 @@ export default async function logDbOperation(
   userId: string | undefined,
   operationType: "create" | "update" | "delete",
   model: "workspace" | "user" | "timeSlot" | "booking",
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any
 ) {
   try {
-    const log = await prisma.log.create({
+    await prisma.log.create({
       data: {
         userId,
         operationType,

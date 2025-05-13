@@ -1,6 +1,6 @@
 "use client";
 
-import prisma, { Workspace, City, Amenity } from "@/lib/prisma";
+import { Workspace, City, Amenity } from "@/lib/prisma";
 import {
   Badge,
   Button,
@@ -10,7 +10,6 @@ import {
   Stack,
   Title,
   Text,
-  LoadingOverlay,
   Loader,
   MultiSelect,
   Combobox,
@@ -18,7 +17,6 @@ import {
   Input,
   InputBase,
 } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useState } from "react";

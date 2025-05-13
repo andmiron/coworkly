@@ -45,6 +45,7 @@ export async function POST(req: Request) {
       },
     });
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user;
 
     await logDbOperation(user.id, "create", "user", user);
@@ -55,18 +56,10 @@ export async function POST(req: Request) {
       },
       { status: 201 }
     );
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 }
-      );
-    }
-
-    console.error("Registration error:", error);
+  } catch {
     return NextResponse.json(
-      { error: "Something went wrong" },
-      { status: 500 }
+      { error: "Failed to register user" },
+      { status: 400 }
     );
   }
 }

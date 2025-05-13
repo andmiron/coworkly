@@ -6,7 +6,6 @@ import {
   TextInput,
   PasswordInput,
   Button,
-  Paper,
   Divider,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
@@ -44,6 +43,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     form.setFieldValue("username", session?.user?.username || "");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session]);
 
   const handleSubmit = async (values: typeof form.values) => {

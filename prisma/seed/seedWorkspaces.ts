@@ -6,7 +6,7 @@ export default async function seedWorkspaces() {
   const cities = await prisma.city.findMany();
   const amenities = await prisma.amenity.findMany();
   const workspaceManagers = await prisma.user.findMany({
-    where: { role: Role.WORKSPACE_MANAGER },
+    where: { role: Role.ADMIN },
   });
 
   const testWorkspaces: Prisma.WorkspaceCreateInput[] = [];

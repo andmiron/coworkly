@@ -1,29 +1,25 @@
 "use client";
 
 import type { Amenity, City, TimeSlot, Workspace } from "@/lib/prisma";
-import { notFound, useSearchParams } from "next/navigation";
+import { notFound } from "next/navigation";
 import {
-  Container,
-  Grid,
   Title,
   Text,
   Group,
   Badge,
-  Paper,
   Stack,
   SimpleGrid,
   Loader,
-  Divider,
-  Box,
   Modal,
   Button,
 } from "@mantine/core";
 import { use, useEffect } from "react";
-import { DatePicker, TimeGrid, getTimeRange } from "@mantine/dates";
+import { DatePicker, TimeGrid } from "@mantine/dates";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 type WorkspaceFull = Workspace & {
   city: City;
@@ -36,6 +32,7 @@ export default function WorkspacePage({
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const { data: session } = useSession();
   const { id } = use(params);
   const router = useRouter();
   const [workspace, setWorkspace] = useState<WorkspaceFull | null>(null);
@@ -95,8 +92,17 @@ export default function WorkspacePage({
         body: JSON.stringify({ timeSlotId }),
       });
 
-      const data = await response.json();
-      console.log(data);
+      if (!response.ok) {
+        notifications.show({
+          title: "Error",
+          message: "Error booking time slot",
+          color: "red",
+        });
+        setIsBooking(false);
+        close();
+        return;
+      }
+
       setIsBooking(false);
       close();
       notifications.show({
@@ -174,16 +180,20 @@ export default function WorkspacePage({
             </Stack>
           </Stack>
         </Stack>
-        <Stack>
-          <Title order={3}>Choose available dates:</Title>
-          <DatePicker
-            hideOutsideDates
-            size="lg"
-            minDate={new Date()}
-            value={selectedDate}
-            onChange={handleDateChange}
-          />
-        </Stack>
+        {session?.user ? (
+          <Stack>
+            <Title order={3}>Choose available dates:</Title>
+            <DatePicker
+              hideOutsideDates
+              size="lg"
+              minDate={new Date()}
+              value={selectedDate}
+              onChange={handleDateChange}
+            />
+          </Stack>
+        ) : (
+          <Text>Please login to book a time slot</Text>
+        )}
       </SimpleGrid>
 
       <Modal opened={opened} onClose={close} title="Book time slot">

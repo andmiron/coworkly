@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, Group, Stack, Title, Text, Loader, Badge } from "@mantine/core";
+import { Card, Group, Stack, Text, Loader, Badge } from "@mantine/core";
 
 export default function SuperAdminPage() {
   const [data, setData] = useState<null | {

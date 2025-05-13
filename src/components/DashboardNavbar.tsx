@@ -1,6 +1,6 @@
 "use client";
 
-import { AppShellNavbar, NavLink, Stack, Title } from "@mantine/core";
+import { NavLink, Stack } from "@mantine/core";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";

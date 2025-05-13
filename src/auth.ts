@@ -66,6 +66,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const isValid = await bcrypt.compare(password, user.password);
           if (!isValid) throw new CredentialsSignin("Invalid credentials");
 
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { password: _, ...userWithoutPassword } = user;
           console.log(
             `authorized user: ${JSON.stringify(userWithoutPassword)}`
