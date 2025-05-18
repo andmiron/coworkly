@@ -9,6 +9,7 @@ export default async function seedUsers() {
     await createUser("superadmin", "superadmin", Role.SUPER_ADMIN),
     await createUser("admin", "admin", Role.ADMIN),
     await createUser("user", "user", Role.USER),
+    await createUser("test", "test", Role.USER),
   ];
 
   async function createUser(username: string, password: string, role: Role) {

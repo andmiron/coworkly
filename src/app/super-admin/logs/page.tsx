@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Table,
   Loader,
@@ -15,6 +15,8 @@ import {
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { notifications } from "@mantine/notifications";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 type Log = {
   id: string;
@@ -32,6 +34,7 @@ export default function LogsPage() {
   const [filterAction, setFilterAction] = useState<string | null>(null);
   const [filterDate, setFilterDate] = useState<Date | null>(null);
   const [expandedLog, setExpandedLog] = useState<Log | null>(null);
+  const tableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchLogs = async () => {
@@ -103,74 +106,98 @@ export default function LogsPage() {
             w={120}
           />
         </Group>
-        <Button
-          variant="light"
-          onClick={() => {
-            setFilterUser(null);
-            setFilterAction(null);
-            setFilterDate(null);
-          }}
-        >
-          Clear Filters
-        </Button>
+        <Group>
+          <Button
+            variant="light"
+            onClick={() => {
+              setFilterUser(null);
+              setFilterAction(null);
+              setFilterDate(null);
+            }}
+          >
+            Clear Filters
+          </Button>
+          <Button
+            variant="light"
+            onClick={async () => {
+              if (!tableRef.current) return;
+              const canvas = await html2canvas(tableRef.current);
+              const imgData = canvas.toDataURL("image/png");
+              const pdf = new jsPDF({
+                orientation: "landscape",
+                unit: "pt",
+                format: "a4",
+              });
+              const imgProps = pdf.getImageProperties(imgData);
+              const pdfWidth = pdf.internal.pageSize.getWidth();
+              const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+              pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+              pdf.save("logs.pdf");
+            }}
+          >
+            Export to PDF
+          </Button>
+        </Group>
       </Group>
       {loading ? (
         <Group justify="center">
           <Loader />
         </Group>
       ) : (
-        <Paper radius="md">
-          <Table striped highlightOnHover withTableBorder withColumnBorders>
-            <Table.Thead>
-              <Table.Tr>
-                <Table.Th>User</Table.Th>
-                <Table.Th>Action</Table.Th>
-                <Table.Th>Model</Table.Th>
-                <Table.Th>Date</Table.Th>
-                <Table.Th>Data</Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {filteredLogs.length === 0 ? (
+        <div ref={tableRef}>
+          <Paper radius="md">
+            <Table striped highlightOnHover withTableBorder withColumnBorders>
+              <Table.Thead>
                 <Table.Tr>
-                  <Table.Td colSpan={5} style={{ textAlign: "center" }}>
-                    <Text c="dimmed">No logs found.</Text>
-                  </Table.Td>
+                  <Table.Th>User</Table.Th>
+                  <Table.Th>Action</Table.Th>
+                  <Table.Th>Model</Table.Th>
+                  <Table.Th>Date</Table.Th>
+                  <Table.Th>Data</Table.Th>
                 </Table.Tr>
-              ) : (
-                filteredLogs.map((l) => (
-                  <Table.Tr key={l.id}>
-                    <Table.Td>{l.userId || "-"}</Table.Td>
-                    <Table.Td>{l.operationType}</Table.Td>
-                    <Table.Td>{l.model}</Table.Td>
-                    <Table.Td>
-                      {l.createdAt
-                        ? new Date(l.createdAt).toLocaleString()
-                        : "-"}
-                    </Table.Td>
-                    <Table.Td>
-                      <UnstyledButton
-                        onClick={() => setExpandedLog(l)}
-                        style={{
-                          maxWidth: 200,
-                          overflow: "hidden",
-                          textOverflow: "ellipsis",
-                          whiteSpace: "nowrap",
-                          display: "block",
-                        }}
-                        title={l.data}
-                      >
-                        {l.data.length > 60
-                          ? l.data.slice(0, 60) + "..."
-                          : l.data}
-                      </UnstyledButton>
+              </Table.Thead>
+              <Table.Tbody>
+                {filteredLogs.length === 0 ? (
+                  <Table.Tr>
+                    <Table.Td colSpan={5} style={{ textAlign: "center" }}>
+                      <Text c="dimmed">No logs found.</Text>
                     </Table.Td>
                   </Table.Tr>
-                ))
-              )}
-            </Table.Tbody>
-          </Table>
-        </Paper>
+                ) : (
+                  filteredLogs.map((l) => (
+                    <Table.Tr key={l.id}>
+                      <Table.Td>{l.userId || "-"}</Table.Td>
+                      <Table.Td>{l.operationType}</Table.Td>
+                      <Table.Td>{l.model}</Table.Td>
+                      <Table.Td>
+                        {l.createdAt
+                          ? new Date(l.createdAt).toLocaleString()
+                          : "-"}
+                      </Table.Td>
+                      <Table.Td>
+                        <UnstyledButton
+                          onClick={() => setExpandedLog(l)}
+                          style={{
+                            maxWidth: 200,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
+                            display: "block",
+                          }}
+                          title={l.data}
+                        >
+                          {l.data.length > 60
+                            ? l.data.slice(0, 60) + "..."
+                            : l.data}
+                        </UnstyledButton>
+                      </Table.Td>
+                    </Table.Tr>
+                  ))
+                )}
+              </Table.Tbody>
+            </Table>
+          </Paper>
+        </div>
       )}
       <Modal
         opened={!!expandedLog}

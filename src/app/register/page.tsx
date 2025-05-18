@@ -137,7 +137,7 @@ export default function RegisterPage() {
           <PasswordInput
             label="Password"
             placeholder="Your password"
-            description="Password must have at least 6 characters"
+            description="Password must have at least 4 characters"
             required
             mt="md"
             {...registerForm.getInputProps("password")}

@@ -160,6 +160,7 @@ export default function WorkspacesPage() {
         {filteredWorkspaces.length > 0 ? (
           filteredWorkspaces.map((workspace) => (
             <Card
+              data-testid="workspace-card"
               key={workspace.id}
               shadow="sm"
               padding="lg"
